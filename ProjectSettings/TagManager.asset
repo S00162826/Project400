@@ -6,6 +6,9 @@ TagManager:
   tags:
   - PowerUp
   - SpeedBoost
+  - GameOver
+  - Ground
+  - Gun
   layers:
   - Default
   - TransparentFX

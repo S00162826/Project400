@@ -5,65 +5,80 @@ using UnityEngine;
 public class KartControl : MonoBehaviour
 {
     Rigidbody rb;
-    public Vector3 centreOfMass = new Vector3(0,0,0);
+   
+    public WheelCollider wheelFL;
+    public WheelCollider wheelFR;
+    public WheelCollider wheelBL;
+    public WheelCollider wheelBR;
 
-    public WheelCollider[] wc;
+    public GameObject FL;
+    public GameObject FR;
+    public GameObject BL;
+    public GameObject BR;
 
-    public int accelerationLength;
+    public float topSpeed = 250f;
+    public float maxTorque = 200f;
+    public float maxSteerAngle = 45f;
+    public float currentSpeed;
+    public float maxBrakeTorque = 2200;
 
-    public bool brakeAllowed;
+    private float Forward;
+    private float Turn;
+    private float Brake;
 
-    public float maxSpeed = 2500f;
-    public float maxSteer = 25f;
-    public float maxBrake = 10000f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.centerOfMass = centreOfMass;
+    }
+
+     void FixedUpdate()
+    {
+        Forward = Input.GetAxis("Vertical");
+        Turn = Input.GetAxis("Horizontal");
+        Brake = Input.GetAxis("Jump");
+
+        wheelFL.steerAngle = maxSteerAngle * Turn;
+        wheelFR.steerAngle = maxSteerAngle * Turn;
+
+        currentSpeed = 2 * 22 / 7 * wheelBL.radius * wheelBL.rpm * 60 / 1000;
+
+        if (currentSpeed < topSpeed)
+        {
+            wheelBL.motorTorque = maxTorque * Forward;
+            wheelBR.motorTorque = maxTorque * Forward;
+        }
+
+        wheelBL.brakeTorque = maxBrakeTorque * Brake;
+        wheelBR.brakeTorque = maxBrakeTorque * Brake;
+        wheelFL.brakeTorque = maxBrakeTorque * Brake;
+        wheelFR.brakeTorque = maxBrakeTorque * Brake;
     }
 
      void Update()
     {
-        Handbrake();
-    }
+        Quaternion flq;
+        Vector3 flv;
+        wheelFL.GetWorldPose(out flv, out flq);
+        FL.transform.position = flv;
+        FL.transform.rotation = flq;
 
-    void FixedUpdate()
-    {
-        for (int i = 0; i < accelerationLength; i++)
-        {
-            wc[i].motorTorque = Input.GetAxis("Vertical") * maxSpeed;
-        }
+        Quaternion blq;
+        Vector3 blv;
+        wheelBL.GetWorldPose(out blv, out blq);
+        BL.transform.position = blv;
+        BL.transform.rotation = blq;
 
-        wc[0].steerAngle = Input.GetAxis("Horizontal") * maxSteer;
-        wc[1].steerAngle = Input.GetAxis("Horizontal") * maxSteer;
-    }
+        Quaternion frq;
+        Vector3 frv;
+        wheelFR.GetWorldPose(out frv, out frq);
+        FR.transform.position = frv;
+        FR.transform.rotation = frq;
 
-    void Handbrake()
-    {
-        if (Input.GetKey(KeyCode.C))
-        {
-            brakeAllowed = true;
-        }
-        else
-        {
-            brakeAllowed = false;
-        }
-
-        if (brakeAllowed)
-        {
-            for (int i = 0; i < accelerationLength; i++)
-            {
-                wc[i].brakeTorque = maxBrake;
-                wc[i].motorTorque = 0;
-            }
-        }
-        else if (!brakeAllowed && Input.GetButton("Vertical") == true)
-        {
-            for (int i = 0; i < accelerationLength; i++)
-            {
-                wc[i].brakeTorque = 0;
-            }
-        }
+        Quaternion brq;
+        Vector3 brv;
+        wheelBR.GetWorldPose(out brv, out brq);
+        BR.transform.position = brv;
+        BR.transform.rotation = brq;
     }
 }

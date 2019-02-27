@@ -5,16 +5,18 @@ using UnityEngine;
 public class KartControl : MonoBehaviour
 {
     Rigidbody rb;
-   
+
+    public GunController theGun;
+
     public WheelCollider wheelFL;
     public WheelCollider wheelFR;
     public WheelCollider wheelBL;
     public WheelCollider wheelBR;
 
-    public GameObject FL;
-    public GameObject FR;
-    public GameObject BL;
-    public GameObject BR;
+    //public GameObject FL;
+    //public GameObject FR;
+    //public GameObject BL;
+    //public GameObject BR;
 
     public float topSpeed = 250f;
     public float maxTorque = 200f;
@@ -60,25 +62,35 @@ public class KartControl : MonoBehaviour
         Quaternion flq;
         Vector3 flv;
         wheelFL.GetWorldPose(out flv, out flq);
-        FL.transform.position = flv;
-        FL.transform.rotation = flq;
+        //FL.transform.position = flv;
+        //FL.transform.rotation = flq;
 
         Quaternion blq;
         Vector3 blv;
         wheelBL.GetWorldPose(out blv, out blq);
-        BL.transform.position = blv;
-        BL.transform.rotation = blq;
+        //BL.transform.position = blv;
+        //BL.transform.rotation = blq;
 
         Quaternion frq;
         Vector3 frv;
         wheelFR.GetWorldPose(out frv, out frq);
-        FR.transform.position = frv;
-        FR.transform.rotation = frq;
+       // FR.transform.position = frv;
+       // FR.transform.rotation = frq;
 
         Quaternion brq;
         Vector3 brv;
         wheelBR.GetWorldPose(out brv, out brq);
-        BR.transform.position = brv;
-        BR.transform.rotation = brq;
+       // BR.transform.position = brv;
+       // BR.transform.rotation = brq;
+
+        //allow shooting
+        if (Input.GetMouseButtonDown(0) && theGun.ammo > 0)
+        {
+            theGun.isFiring = true;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+            theGun.isFiring = false;
     }
 }
+

@@ -11,5 +11,6 @@ public class Rotator : MonoBehaviour
     {
         //Only rotates along y axis becaus x and z are set to 0
         transform.Rotate(new Vector3(0, 30, 0) * Time.deltaTime);
+        Destroy(gameObject,10f);
     }
 }

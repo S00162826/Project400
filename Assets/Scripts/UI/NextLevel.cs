@@ -12,8 +12,8 @@ public class NextLevel : MonoBehaviour
     public string levelName;
 
     //Animation variables
-    public Image black;
-    public Animator anim;
+    //public Image black;
+    //public Animator anim;
 
     ////audio variable
     //AudioSource buttonSound;
@@ -41,15 +41,17 @@ public class NextLevel : MonoBehaviour
         //buttonSound.Play();
         //KeepGameOverCanvas();
 
-        StartCoroutine(Fading());
+        //StartCoroutine(Fading());
+        SceneManager.LoadScene(index);
+
     }
 
-    IEnumerator Fading()
-    {
-        anim.SetBool("fade", true);
-        yield return new WaitUntil(() => black.color.a == 1);
-        SceneManager.LoadScene(index);
-    }
+    //IEnumerator Fading()
+    //{
+    //    //anim.SetBool("fade", true);
+    //    //yield return new WaitUntil(() => black.color.a == 1);
+    //    SceneManager.LoadScene(index);
+    //}
 
     //void KeepGameOverCanvas()
     //{
